@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import SignatureCanvas from "react-signature-canvas";
 import credbg from "../Assets/Images/Home/credbg.jpg";
 import { PDFDocument, rgb } from "pdf-lib";
 import getConfig from "next/config";
+
 
 const CreditApp = () => {
   const [modifiedPdfBlob, setModifiedPdfBlob] = useState("");
@@ -66,6 +66,7 @@ const CreditApp = () => {
   const [signatureDateTwo, setSignatureDateTwo] = useState("");
   const signatureCanvasOne = useRef(null);
   const signatureCanvasTwo = useRef(null);
+  const [pdfDoc, setPdfDoc] = useState(null);
   const [selectedOptionOne, setSelectedOptionOne] = useState("");
   const [selectedOptionTwo, setSelectedOptionTwo] = useState("");
   const [selectedOptionThree, setSelectedOptionThree] = useState("");
@@ -143,6 +144,81 @@ const CreditApp = () => {
     setSuccess(false);
   };
 
+  // Prepare your data for submission
+  const data = {
+    kvlrep,
+    kvlTiresAmount,
+    kalPartzAmount,
+    others,
+    legalName,
+    tradeName,
+    taxId,
+    dateOfBirth,
+    businessStreet,
+    businessCounty,
+    businessCity,
+    businessState,
+    businessZip,
+    businessPhone,
+    businessFax,
+    businessCellPhone,
+    billingContact,
+    billingAddress,
+    billingCounty,
+    billingCity,
+    billingState,
+    billingZip,
+    billingPhone,
+    billingMail,
+    stateBusiness,
+    businessId,
+    typeOfBusiness,
+    yearsInBusiness,
+    parentCompany,
+    applicantName,
+    applicantTitle,
+    applicantOwnership,
+    socialSecurityNumber,
+    birthdate,
+    applicantMail,
+    applicantStreet,
+    applicantCounty,
+    applicantCity,
+    applicantState,
+    applicantZip,
+    yesExplain,
+    referenceBank,
+    referenceContact,
+    referencePhone,
+    referenceMail,
+    referenceAccNum,
+    referenceBankTwo,
+    referenceContactTwo,
+    referencePhoneTwo,
+    referenceMailTwo,
+    referenceAccNumTwo,
+    signatureTitleOne,
+    signatureDateOne,
+    signatureTitleTwo,
+    signatureDateTwo,
+    signatureCanvasOne,
+    signatureCanvasTwo,
+    error,
+    selectedOptionOne,
+    selectedOptionTwo,
+    selectedOptionThree,
+    selectedOptionFour,
+    selectedOptionFive,
+  };
+
+  const handleClearSignatureOne = () => {
+    signatureCanvasOne.current.clear();
+  };
+
+  const handleClearSignatureTwo = () => {
+    signatureCanvasTwo.current.clear();
+  };
+
   const { publicRuntimeConfig } = getConfig();
 
   const handleGenerateModifiedPdf = async () => {
@@ -159,6 +235,9 @@ const CreditApp = () => {
       }
 
       const existingPdfBytes = await response.arrayBuffer();
+
+      const loadedPdfDoc = await PDFDocument.load(existingPdfBytes);
+      setPdfDoc(loadedPdfDoc); // Set pdfDoc in state
 
       // Load existing PDF
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -724,6 +803,8 @@ const CreditApp = () => {
         // Handle this case accordingly
         return;
       }
+
+
       const modifiedPdfBlob = new Blob([modifiedPdfBytes], {
         type: "application/pdf",
       });
@@ -736,119 +817,112 @@ const CreditApp = () => {
       console.error("Error generating modified PDF:", error);
       alert("Error generating modified PDF. Please try again.");
     }
-  };
-  // Prepare your data for submission
-  const data = {
-    kvlrep,
-    kvlTiresAmount,
-    kalPartzAmount,
-    others,
-    legalName,
-    tradeName,
-    taxId,
-    dateOfBirth,
-    businessStreet,
-    businessCounty,
-    businessCity,
-    businessState,
-    businessZip,
-    businessPhone,
-    businessFax,
-    businessCellPhone,
-    billingContact,
-    billingAddress,
-    billingCounty,
-    billingCity,
-    billingState,
-    billingZip,
-    billingPhone,
-    billingMail,
-    stateBusiness,
-    businessId,
-    typeOfBusiness,
-    yearsInBusiness,
-    parentCompany,
-    applicantName,
-    applicantTitle,
-    applicantOwnership,
-    socialSecurityNumber,
-    birthdate,
-    applicantMail,
-    applicantStreet,
-    applicantCounty,
-    applicantCity,
-    applicantState,
-    applicantZip,
-    yesExplain,
-    referenceBank,
-    referenceContact,
-    referencePhone,
-    referenceMail,
-    referenceAccNum,
-    referenceBankTwo,
-    referenceContactTwo,
-    referencePhoneTwo,
-    referenceMailTwo,
-    referenceAccNumTwo,
-    signatureTitleOne,
-    signatureDateOne,
-    signatureTitleTwo,
-    signatureDateTwo,
-    signatureCanvasOne,
-    signatureCanvasTwo,
-    error,
-    selectedOptionOne,
-    selectedOptionTwo,
-    selectedOptionThree,
-    selectedOptionFour,
-    selectedOptionFive,
-  };
+};
 
-  const handleClearSignatureOne = () => {
-    signatureCanvasOne.current.clear();
-  };
+    const handleSubmit = async (e) => {
+  e.preventDefault();
+  setButtonText("Saving PDF...");
 
-  const handleClearSignatureTwo = () => {
-    signatureCanvasTwo.current.clear();
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setButtonText("Sending...");
-
-    if (modifiedPdfBlob) {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: "crraju@kalfreight.com",
-          subject: "Credit Application",
-          modifiedPdfData: modifiedPdfBlob.toString("base64"),
-        }),
-      };
-
-      try {
-        const response = await fetch("/api/sendEmail", requestOptions);
-        const result = await response.json();
-
-        if (result.success) {
-          console.log("Email sent successfully");
-        } else {
-          console.error("Error sending email:", result.error);
-        }
-      } catch (error) {
-        console.error("Error sending email:", error);
-      } finally {
-        setButtonText("Submit");
-      }
-    } else {
-      console.error("Modified PDF Blob is null. Handle this case accordingly.");
+  try {
+    if (!pdfDoc) {
+      console.error("PDF document not initialized.");
+      setButtonText("Submit");
+      return;
     }
-  };
+
+    // Check if the modified PDF is already generated
+    if (!modifiedPdfBlob) {
+      // Generate modified PDF and set Blob if not already generated
+      const modifiedPdfBytes = await pdfDoc.save();
+      console.log("Modified PDF bytes:", modifiedPdfBytes);
+
+      if (!modifiedPdfBytes) {
+        console.error("Modified PDF bytes are null.");
+        setButtonText("Submit");
+        return;
+      }
+
+       
+      const modifiedPdfBlob = new Blob([modifiedPdfBytes], {
+        type: "application/pdf",
+      });
+
+      setModifiedPdfBlob(modifiedPdfBlob);
+    }
+
+ // Show a confirmation dialog
+      const userConfirmed = window.confirm("Do you want to submit the form?");
+      if (!userConfirmed) {
+        setButtonText("Submit");
+        return;
+      }
+
+
+    // Use FileReader to convert the Blob to base64
+    const reader = new FileReader();
+
+    // Define a promise to wait for the base64 data to be read
+    const readBase64Data = () => {
+      return new Promise((resolve) => {
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1];
+          // Log the base64 data
+          console.log("Base64 Data:", base64Data);
+          resolve(base64Data);
+        };
+      });
+    };
+
+    // Start reading the Blob as data URL
+    reader.readAsDataURL(modifiedPdfBlob);
+
+    // Wait for the base64 data to be read
+    const base64Data = await readBase64Data();
+
+    // Send data to the backend
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        modifiedPdfData: base64Data,
+      }),
+    };
+
+    const response = await fetch("/api/savePdf", requestOptions);
+    const result = await response.json();
+
+    if (result.success) {
+      console.log("PDF saved and email sent successfully");
+    } else {
+      console.error("Error saving PDF:", result.message);
+    }
+
+    setButtonText("Submit"); // Reset button text
+  } catch (error) {
+    console.error("Error saving PDF:", error);
+    setButtonText("Submit"); // Reset button text in case of an error
+  }
+};
+
+  
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setButtonText("Saving PDF..."); // Set the button text accordingly
+
+        try {
+          await handleGenerateModifiedPdf(e); // Wait for handleGenerateModifiedPdf to complete
+          await handleSubmit(e); // Call handleSubmit after handleGenerateModifiedPdf
+
+          // Additional logic or actions after both functions are executed
+        } catch (error) {
+          console.error("Error during form submission:", error);
+        } finally {
+          setButtonText("Submit"); // Reset button text regardless of success or failure
+        }
+      }}
       className="w-full md:p-8 p-4 lg:flex flex justify-center items-center font-Helvetica"
       style={{
         display: "flex",
@@ -1773,7 +1847,6 @@ const CreditApp = () => {
           className="text-white bg-red-500 rounded h-12 p-4 w-48 mt-2 flex justify-center items-center font-Helvetica"
           type="submit"
           id="submitmain"
-          onClick={handleGenerateModifiedPdf}
         >
           {buttonText}
         </button>
