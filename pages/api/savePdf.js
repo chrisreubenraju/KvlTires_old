@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         fs.mkdirSync(saveDirectory, { recursive: true });
       }
 
-      const fileName = "modifiedPdf.pdf";
+      const fileName = "Credit_Application.pdf";
       const filePath = path.join(saveDirectory, fileName);
 
       fs.writeFileSync(filePath, pdfBuffer);
@@ -37,9 +37,9 @@ export default async function handler(req, res) {
 
         const mailOptions = {
           from: process.env.NEXT_PUBLIC_EMAIL,
-          to: "crraju@kalfreight.com", // Replace with the user's email
-          subject: "Modified PDF File",
-          text: "Please find the attached modified PDF file.",
+          to: "crraju@kalfreight.com", 
+          subject: "Credit Application from KvlTires",
+          text: "Please find the attached PDF file for Credit Application.",
           attachments: [
             {
               filename: fileName,

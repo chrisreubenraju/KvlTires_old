@@ -3,6 +3,7 @@ import SignatureCanvas from "react-signature-canvas";
 import credbg from "../Assets/Images/Home/credbg.jpg";
 import { PDFDocument, rgb } from "pdf-lib";
 import getConfig from "next/config";
+import Sparkles from "../Animation/Sparkel";
 
 
 const CreditApp = () => {
@@ -221,700 +222,661 @@ const CreditApp = () => {
 
   const { publicRuntimeConfig } = getConfig();
 
-  const handleGenerateModifiedPdf = async () => {
-    try {
-      // Fetch the PDF file
-      const pdfUrl = `${publicRuntimeConfig.BASE_URL}/Documents/Tires&PartsCreditApplication.pdf`;
-      const response = await fetch(pdfUrl);
+ const handleGenerateModifiedPdf = async (e) => {
+   try {
+     e.preventDefault();
+     setButtonText("Submitting Form...");
 
-      // Check if the fetch was successful
-      if (!response.ok) {
-        console.error("Error fetching original PDF:", response.statusText);
-        alert("Error fetching original PDF. Please try again.");
-        return;
-      }
+     let pdfDoc = null;
+     let modifiedPdfBlob = null;
 
-      const existingPdfBytes = await response.arrayBuffer();
+     // Fetch the PDF file
+     const pdfUrl = `${publicRuntimeConfig.BASE_URL}/Documents/Tires&PartsCreditApplication.pdf`;
+     const response = await fetch(pdfUrl);
 
-      const loadedPdfDoc = await PDFDocument.load(existingPdfBytes);
-      setPdfDoc(loadedPdfDoc); // Set pdfDoc in state
+     // Check if the fetch was successful
+     if (!response.ok) {
+       console.error("Error fetching original PDF:", response.statusText);
+       alert("Error fetching original PDF. Please try again.");
+       setButtonText("Submit");
+       return;
+     }
 
-      // Load existing PDF
-      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+     const existingPdfBytes = await response.arrayBuffer();
+     const loadedPdfDoc = await PDFDocument.load(existingPdfBytes);
+     setPdfDoc(loadedPdfDoc); // Set pdfDoc in state
 
-      // Access the first page
-      const page = pdfDoc.getPage(0); // Adjust the page number accordingly
+     // Load existing PDF
+     pdfDoc = await PDFDocument.load(existingPdfBytes);
 
-      if (selectedOptionOne === "kvltires") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 146,
-          y: 683,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
-      page.drawText(`${kvlTiresAmount}`, {
-        x: 255,
-        y: 689,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
+     // Access the first page
+     const page = pdfDoc.getPage(0); // Adjust the page number accordingly
 
-      if (selectedOptionOne === "kalpartz") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 351,
-          y: 683,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionOne === "kvltires") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 146,
+         y: 683,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
+     page.drawText(`${kvlTiresAmount}`, {
+       x: 255,
+       y: 689,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
 
-      page.drawText(`${kalPartzAmount}`, {
-        x: 470,
-        y: 689,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
+     if (selectedOptionOne === "kalpartz") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 351,
+         y: 683,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionOne === "cod") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 146,
-          y: 660,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     page.drawText(`${kalPartzAmount}`, {
+       x: 470,
+       y: 689,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
 
-      if (selectedOptionTwo === "corporation") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 100,
-          y: 630,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionOne === "cod") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 146,
+         y: 660,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "limitedLiabComp") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 226,
-          y: 630,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "corporation") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 100,
+         y: 630,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "trust") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 526,
-          y: 630,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "limitedLiabComp") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 226,
+         y: 630,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "generalPartnership") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 377,
-          y: 630,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "trust") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 526,
+         y: 630,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "soleProprietor") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 100,
-          y: 620,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "generalPartnership") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 377,
+         y: 630,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "limitedPartnership") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 226,
-          y: 620,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "soleProprietor") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 100,
+         y: 620,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "municipality") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 377,
-          y: 620,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "limitedPartnership") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 226,
+         y: 620,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionTwo === "others") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 524,
-          y: 621,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
-      // Add text to the page
-      page.drawText(`${others}`, {
-        x: 90,
-        y: 647,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
+     if (selectedOptionTwo === "municipality") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 377,
+         y: 620,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionThree === "pono") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 129,
-          y: 610,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionTwo === "others") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 524,
+         y: 621,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
+     // Add text to the page
+     page.drawText(`${others}`, {
+       x: 90,
+       y: 647,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
 
-      if (selectedOptionThree === "poyes") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 172,
-          y: 610,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionThree === "pono") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 129,
+         y: 610,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionFour === "teno") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 341,
-          y: 610,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionThree === "poyes") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 172,
+         y: 610,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionFour === "teyes") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 377,
-          y: 610,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     if (selectedOptionFour === "teno") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 341,
+         y: 610,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      // Add text to the page
-      page.drawText(`${legalName}`, {
-        x: 90,
-        y: 578,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${tradeName}`, {
-        x: 110,
-        y: 563,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${taxId}`, {
-        x: 470,
-        y: 578,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${dateOfBirth}`, {
-        x: 350,
-        y: 578,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessStreet}`, {
-        x: 80,
-        y: 551,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessCounty}`, {
-        x: 307,
-        y: 551,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessCity}`, {
-        x: 388,
-        y: 551,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessState}`, {
-        x: 488,
-        y: 551,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessZip}`, {
-        x: 540,
-        y: 551,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessPhone}`, {
-        x: 69,
-        y: 538,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessFax}`, {
-        x: 165,
-        y: 538,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessCellPhone}`, {
-        x: 275,
-        y: 538,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessMail}`, {
-        x: 392,
-        y: 538,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingContact}`, {
-        x: 105,
-        y: 513,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingAddress}`, {
-        x: 105,
-        y: 525,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingCounty}`, {
-        x: 307,
-        y: 525,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingCity}`, {
-        x: 388,
-        y: 525,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingState}`, {
-        x: 484,
-        y: 525,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingZip}`, {
-        x: 540,
-        y: 525,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingPhone}`, {
-        x: 307,
-        y: 513,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${billingMail}`, {
-        x: 392,
-        y: 513,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${stateBusiness}`, {
-        x: 190,
-        y: 500,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${businessId}`, {
-        x: 500,
-        y: 500,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${typeOfBusiness}`, {
-        x: 105,
-        y: 488,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${yearsInBusiness}`, {
-        x: 438,
-        y: 487,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${parentCompany}`, {
-        x: 172,
-        y: 475,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantName}`, {
-        x: 182,
-        y: 445,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantTitle}`, {
-        x: 420,
-        y: 445,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantOwnership}`, {
-        x: 550,
-        y: 445,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${socialSecurityNumber}`, {
-        x: 115,
-        y: 431,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${birthdate}`, {
-        x: 249,
-        y: 431,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantMail}`, {
-        x: 335,
-        y: 432,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantStreet}`, {
-        x: 70,
-        y: 419,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantCounty}`, {
-        x: 310,
-        y: 419,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantCity}`, {
-        x: 386,
-        y: 419,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantState}`, {
-        x: 487,
-        y: 419,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${applicantZip}`, {
-        x: 537,
-        y: 419,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
+     if (selectedOptionFour === "teyes") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 377,
+         y: 610,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      if (selectedOptionFive === "brno") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 525,
-          y: 369,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
+     // Add text to the page
+     page.drawText(`${legalName}`, {
+       x: 90,
+       y: 578,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${tradeName}`, {
+       x: 110,
+       y: 563,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${taxId}`, {
+       x: 470,
+       y: 578,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${dateOfBirth}`, {
+       x: 350,
+       y: 578,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessStreet}`, {
+       x: 80,
+       y: 551,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessCounty}`, {
+       x: 307,
+       y: 551,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessCity}`, {
+       x: 388,
+       y: 551,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessState}`, {
+       x: 488,
+       y: 551,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessZip}`, {
+       x: 540,
+       y: 551,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessPhone}`, {
+       x: 69,
+       y: 538,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessFax}`, {
+       x: 165,
+       y: 538,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessCellPhone}`, {
+       x: 275,
+       y: 538,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessMail}`, {
+       x: 392,
+       y: 538,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingContact}`, {
+       x: 105,
+       y: 513,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingAddress}`, {
+       x: 105,
+       y: 525,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingCounty}`, {
+       x: 307,
+       y: 525,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingCity}`, {
+       x: 388,
+       y: 525,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingState}`, {
+       x: 484,
+       y: 525,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingZip}`, {
+       x: 540,
+       y: 525,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingPhone}`, {
+       x: 307,
+       y: 513,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${billingMail}`, {
+       x: 392,
+       y: 513,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${stateBusiness}`, {
+       x: 190,
+       y: 500,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${businessId}`, {
+       x: 500,
+       y: 500,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${typeOfBusiness}`, {
+       x: 105,
+       y: 488,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${yearsInBusiness}`, {
+       x: 438,
+       y: 487,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${parentCompany}`, {
+       x: 172,
+       y: 475,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantName}`, {
+       x: 182,
+       y: 445,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantTitle}`, {
+       x: 420,
+       y: 445,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantOwnership}`, {
+       x: 550,
+       y: 445,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${socialSecurityNumber}`, {
+       x: 115,
+       y: 431,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${birthdate}`, {
+       x: 249,
+       y: 431,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantMail}`, {
+       x: 335,
+       y: 432,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantStreet}`, {
+       x: 70,
+       y: 419,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantCounty}`, {
+       x: 310,
+       y: 419,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantCity}`, {
+       x: 386,
+       y: 419,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantState}`, {
+       x: 487,
+       y: 419,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${applicantZip}`, {
+       x: 537,
+       y: 419,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
 
-      if (selectedOptionFive === "bryes") {
-        const tickMark = "\u2022"; // Unicode character for a tick mark
-        page.drawText(tickMark, {
-          x: 326,
-          y: 369,
-          tickMark,
-          size: 30,
-          fontColor: rgb(0, 0, 0),
-        });
-      }
-      page.drawText(`${yesExplain}`, {
-        x: 386,
-        y: 376,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceBank}`, {
-        x: 40,
-        y: 327,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceContact}`, {
-        x: 190,
-        y: 327,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referencePhone}`, {
-        x: 295,
-        y: 327,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceMail}`, {
-        x: 378,
-        y: 327,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceAccNum}`, {
-        x: 475,
-        y: 327,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceBankTwo}`, {
-        x: 40,
-        y: 314,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceContactTwo}`, {
-        x: 190,
-        y: 314,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referencePhoneTwo}`, {
-        x: 295,
-        y: 314,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceMailTwo}`, {
-        x: 378,
-        y: 314,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${referenceAccNumTwo}`, {
-        x: 475,
-        y: 314,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${signatureTitleOne}`, {
-        x: 355,
-        y: 124,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${signatureDateOne}`, {
-        x: 520,
-        y: 124,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${signatureTitleTwo}`, {
-        x: 355,
-        y: 105,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
-      page.drawText(`${signatureDateTwo}`, {
-        x: 520,
-        y: 105,
-        size: 9,
-        fontColor: rgb(0, 0, 0),
-      });
+     if (selectedOptionFive === "brno") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 525,
+         y: 369,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
 
-      // Add signature image to the page
-      const signatureImageOne = await pdfDoc.embedPng(
-        signatureCanvasOne.current.toDataURL("image/png")
-      );
+     if (selectedOptionFive === "bryes") {
+       const tickMark = "\u2022"; // Unicode character for a tick mark
+       page.drawText(tickMark, {
+         x: 326,
+         y: 369,
+         tickMark,
+         size: 30,
+         fontColor: rgb(0, 0, 0),
+       });
+     }
+     page.drawText(`${yesExplain}`, {
+       x: 386,
+       y: 376,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceBank}`, {
+       x: 40,
+       y: 327,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceContact}`, {
+       x: 190,
+       y: 327,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referencePhone}`, {
+       x: 295,
+       y: 327,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceMail}`, {
+       x: 378,
+       y: 327,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceAccNum}`, {
+       x: 475,
+       y: 327,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceBankTwo}`, {
+       x: 40,
+       y: 314,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceContactTwo}`, {
+       x: 190,
+       y: 314,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referencePhoneTwo}`, {
+       x: 295,
+       y: 314,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceMailTwo}`, {
+       x: 378,
+       y: 314,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${referenceAccNumTwo}`, {
+       x: 475,
+       y: 314,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${signatureTitleOne}`, {
+       x: 355,
+       y: 124,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${signatureDateOne}`, {
+       x: 520,
+       y: 124,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${signatureTitleTwo}`, {
+       x: 355,
+       y: 105,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
+     page.drawText(`${signatureDateTwo}`, {
+       x: 520,
+       y: 105,
+       size: 9,
+       fontColor: rgb(0, 0, 0),
+     });
 
-      const signatureImageTwo = await pdfDoc.embedPng(
-        signatureCanvasTwo.current.toDataURL("image/png")
-      );
+     // Add signature image to the page
+     const signatureImageOne = await pdfDoc.embedPng(
+       signatureCanvasOne.current.toDataURL("image/png")
+     );
 
-      // Assuming 'page' is a reference to a pdf-lib page object
-      page.drawImage(signatureImageOne, {
-        x: 120,
-        y: 124,
-        width: 100,
-        height: 25,
-      });
-      page.drawImage(signatureImageTwo, {
-        x: 120,
-        y: 102,
-        width: 100,
-        height: 25,
-      });
+     const signatureImageTwo = await pdfDoc.embedPng(
+       signatureCanvasTwo.current.toDataURL("image/png")
+     );
 
-      // const handleFileUpload = (e) => {
-      //   // Your file upload logic goes here
-      //   const file = e.target.files[0];
-      //   setUploadedFile(file);
-      // };
+     // Assuming 'page' is a reference to a pdf-lib page object
+     page.drawImage(signatureImageOne, {
+       x: 120,
+       y: 124,
+       width: 100,
+       height: 25,
+     });
+     page.drawImage(signatureImageTwo, {
+       x: 120,
+       y: 102,
+       width: 100,
+       height: 25,
+     });
 
-      const modifiedPdfBytes = await pdfDoc.save();
-      console.log("Modified PDF bytes:", modifiedPdfBytes);
+    //  const handleFileUpload = (e) => {
+    //    // Your file upload logic goes here
+    //    const file = e.target.files[0];
+    //    setUploadedFile(file);
+    //  };
 
-      if (!modifiedPdfBytes) {
-        console.error("Modified PDF bytes are null.");
-        // Handle this case accordingly
-        return;
-      }
+     // Generate modified PDF
+     const modifiedPdfBytes = await pdfDoc.save();
 
+     if (!modifiedPdfBytes) {
+       console.error("Modified PDF bytes are null.");
+       setButtonText("Submit");
+       return;
+     }
 
-      const modifiedPdfBlob = new Blob([modifiedPdfBytes], {
-        type: "application/pdf",
-      });
+     modifiedPdfBlob = new Blob([modifiedPdfBytes], {
+       type: "application/pdf",
+     });
 
-      setModifiedPdfBlob(modifiedPdfBlob);
+     setModifiedPdfBlob(modifiedPdfBlob);
 
-      // Open the modified PDF in a new tab
+     // Use FileReader to convert the Blob to base64
+     const reader = new FileReader();
+
+     // Define a promise to wait for the base64 data to be read
+     const readBase64Data = () => {
+       return new Promise((resolve) => {
+         reader.onloadend = () => {
+           const base64Data = reader.result.split(",")[1];
+           // Log the base64 data
+           console.log("Base64 Data:", base64Data);
+           resolve(base64Data);
+         };
+       });
+     };
+
+     // Start reading the Blob as data URL
+     reader.readAsDataURL(modifiedPdfBlob);
+
+     // Wait for the base64 data to be read
+     const base64Data = await readBase64Data();
+
+     // Send data to the backend
+     const requestOptions = {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({
+         modifiedPdfData: base64Data,
+       }),
+     };
+
+     const response_one = await fetch("/api/savePdf", requestOptions);
+     const result = await response_one.json();
+
+     if (result.success) {
+       console.log("PDF saved and email sent successfully");
+        setSuccess(true);
+        // Open the modified PDF in a new tab
       window.open(URL.createObjectURL(modifiedPdfBlob), "_blank");
-    } catch (error) {
-      console.error("Error generating modified PDF:", error);
-      alert("Error generating modified PDF. Please try again.");
-    }
-};
-
-    const handleSubmit = async (e) => {
-  e.preventDefault();
-  setButtonText("Saving PDF...");
-
-  try {
-    if (!pdfDoc) {
-      console.error("PDF document not initialized.");
-      setButtonText("Submit");
-      return;
-    }
-
-    // Check if the modified PDF is already generated
-    if (!modifiedPdfBlob) {
-      // Generate modified PDF and set Blob if not already generated
-      const modifiedPdfBytes = await pdfDoc.save();
-      console.log("Modified PDF bytes:", modifiedPdfBytes);
-
-      if (!modifiedPdfBytes) {
-        console.error("Modified PDF bytes are null.");
-        setButtonText("Submit");
-        return;
-      }
-
-       
-      const modifiedPdfBlob = new Blob([modifiedPdfBytes], {
-        type: "application/pdf",
-      });
-
-      setModifiedPdfBlob(modifiedPdfBlob);
-    }
-
- // Show a confirmation dialog
-      const userConfirmed = window.confirm("Do you want to submit the form?");
-      if (!userConfirmed) {
-        setButtonText("Submit");
-        return;
-      }
-
-
-    // Use FileReader to convert the Blob to base64
-    const reader = new FileReader();
-
-    // Define a promise to wait for the base64 data to be read
-    const readBase64Data = () => {
-      return new Promise((resolve) => {
-        reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1];
-          // Log the base64 data
-          console.log("Base64 Data:", base64Data);
-          resolve(base64Data);
-        };
-      });
-    };
-
-    // Start reading the Blob as data URL
-    reader.readAsDataURL(modifiedPdfBlob);
-
-    // Wait for the base64 data to be read
-    const base64Data = await readBase64Data();
-
-    // Send data to the backend
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        modifiedPdfData: base64Data,
-      }),
-    };
-
-    const response = await fetch("/api/savePdf", requestOptions);
-    const result = await response.json();
-
-    if (result.success) {
-      console.log("PDF saved and email sent successfully");
     } else {
       console.error("Error saving PDF:", result.message);
     }
 
-    setButtonText("Submit"); // Reset button text
-  } catch (error) {
-    console.error("Error saving PDF:", error);
-    setButtonText("Submit"); // Reset button text in case of an error
-  }
-};
-
+     setButtonText("Submit"); // Reset button text
+     
+   } catch (error) {
+     console.error("Error generating or saving PDF:", error);
+     alert("Error generating or saving PDF. Please try again.");
+     setButtonText("Submit"); // Reset button text in case of an error
+   }
+ };
   
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        setButtonText("Saving PDF..."); // Set the button text accordingly
+        setButtonText("Submitting Form"); // Set the button text accordingly
 
         try {
           await handleGenerateModifiedPdf(e); // Wait for handleGenerateModifiedPdf to complete
-          await handleSubmit(e); // Call handleSubmit after handleGenerateModifiedPdf
 
           // Additional logic or actions after both functions are executed
         } catch (error) {
@@ -934,9 +896,10 @@ const CreditApp = () => {
         backdropFilter: "blur(5px)",
       }}
     >
-      <h2 className="lg:text-xl text-lg font-bold font-poppins text-left pt-8 text-black">
-        Credit Application
-      </h2>
+      <h1 style={{ fontSize: "36px", color: "red", fontWeight: "bold" }}>
+        CREDIT APPLICATION REQUEST
+      </h1>
+
       <div
         className="w-full lg:w-2/3  md:p-8 p-4 grid-section"
         style={{ border: "solid 2px black" }}
@@ -1177,9 +1140,7 @@ const CreditApp = () => {
                     setUploadedFile(null); // Clear uploaded file when 'fleet' is selected
                   }}
                 />
-                <label htmlFor="teyes">
-                  YES (Attach Exemption Certificate)
-                </label>
+                <label htmlFor="teyes">YES</label>
               </div>
 
               {/* {selectedOptionFour === "teyes" && (
@@ -1899,6 +1860,22 @@ const CreditApp = () => {
           border-bottom: 2px solid red;
         }
       `}</style>
+      {/* Conditional rendering of the success message div */}
+      {success && (
+        <div className="text-2xl font-bold bg-white text-black w-full m-20 mt-3 text-center mb-16 font-Helvetica">
+          <Sparkles>
+            <div className="text-black flex flex-col">
+              <div className="text-5xl pb-4 text-red-500">Thank you</div>
+              <div className="text-xl font-light text-gray-700">
+                Your submission has been received
+              </div>
+              <div className="text-xl font-light text-gray-700">
+                We will contact you soon!
+              </div>
+            </div>
+          </Sparkles>
+        </div>
+      )}
     </form>
   );
 };
