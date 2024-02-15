@@ -1,22 +1,37 @@
 // pages/api/fetchPdf.js
+
+import fetch from "node-fetch";
 import getConfig from "next/config";
-  const { publicRuntimeConfig } = getConfig();
+
 
 export default async function handler(req, res) {
-  try {
-    // Fetch the PDF document from wherever it's stored
-    const pdfUrl = `${publicRuntimeConfig.BASE_URL}/Documents/Tires&PartsCreditApplication.pdf`; // Adjust the URL accordingly
-    const response = await fetch(pdfUrl);
+  if (req.method === "POST") {
+    try {
+      // Fetch the PDF file from the external URL
+const { publicRuntimeConfig } = getConfig();
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch PDF");
+
+      const pdfUrl = `${publicRuntimeConfig.BASE_URL}/Documents/Tires&PartsCreditApplication.pdf`;
+      const response = await fetch(pdfUrl);
+
+      // Check if the fetch was successful
+      if (!response.ok) {
+        throw new Error("Failed to fetch PDF file");
+      }
+
+      // Convert the response to a buffer
+      const pdfBuffer = await response.buffer();
+
+      // Set the content type header
+      res.setHeader("Content-Type", "application/pdf");
+
+      // Serve the PDF file
+      res.status(200).send(pdfBuffer);
+    } catch (error) {
+      console.error("Error fetching or serving PDF:", error);
+      res.status(500).send("Internal Server Error");
     }
-
-    const pdfBuffer = await response.buffer();
-    res.setHeader("Content-Type", "application/pdf");
-    res.send(pdfBuffer);
-  } catch (error) {
-    console.error("Error fetching PDF:", error);
-    res.status(500).json({ error: "Failed to fetch PDF" });
+  } else {
+    res.status(405).json({ success: false, message: "Method Not Allowed" });
   }
 }

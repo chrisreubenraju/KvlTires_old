@@ -157,7 +157,7 @@ const TopUpbar = () => {
           </MondayToFridayContainer>
         </div>
 
-       <Link href="/creditApp">
+       <a href="/Documents/Tires&PartsCreditApplication.pdf" download="Credit_Application.pdf" target="_blank">
   <CreditAppContainer>
     <span className="h-5 w-5 animate-bounce bg-black rounded-full text-white flex flexCenter">
       <MdOutlineKeyboardArrowRight />
@@ -166,7 +166,7 @@ const TopUpbar = () => {
       Credit Application
     </span>
   </CreditAppContainer>
-</Link>
+</a>
       </div>
     </div>
   );

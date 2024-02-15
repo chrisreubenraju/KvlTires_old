@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import nodemailer from "nodemailer";
 
-const saveDirectory = "pages/modDocs/";
+const saveDirectory = "../modDocs";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
